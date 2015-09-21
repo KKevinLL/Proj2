@@ -60,8 +60,8 @@ public class InstagramModel {
             followers: json["counts"]["followed_by"].intValue, follows: json["counts"]["follows"].intValue))
     }
     
-    func fetchUserMediaDetails(callback: ([Media]) -> Void) {
-        Alamofire.request(.GET, "https://api.instagram.com/v1/users/1077922881/media/recent/?client_id=c953ffadb974463f9f6813fc4fc91673")
+    func fetchUserMediaDetails(id: String, callback: ([Media]) -> Void) {
+        Alamofire.request(.GET, "https://api.instagram.com/v1/users/" + id + "/media/recent/?client_id=c953ffadb974463f9f6813fc4fc91673")
             .responseJSON { _, _, jsonObj in
                 self.populateMediaWith(jsonObj.value!, callback: callback)
         }

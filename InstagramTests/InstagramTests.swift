@@ -21,18 +21,33 @@ class InstagramTests: XCTestCase {
         super.tearDown()
     }
     
-    func testModelFunctions() {
-        let id_1 = "39938074"
-        InstagramModel().fetchUserDetails {(user: InstagramModel.User) -> Void in
+    func testFetchUserDetails() {
+        let id_1 = "399380794"
+        let id_2 = "1077922881"
+        InstagramModel().fetchUserDetails (id_2, callback: {(user: InstagramModel.User) -> Void in
             XCTAssertEqual(user.username, "kkevinliu")
-        }
+            XCTAssertEqual(user.posts, 1)
+            XCTAssertEqual(user.follows, 30)
+        })
+        InstagramModel().fetchUserDetails (id_1, callback: {(user: InstagramModel.User) -> Void in
+            XCTAssertEqual(user.followers, 440)
+            XCTAssertEqual(user.bio, "Every dream has a part II. UC Berkeley '18")
+        })
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
+    func testFetchMediaDetails() {
+        let id_1 = "399380794"
+        InstagramModel().fetchPopularMediaDetails{(media: [InstagramModel.Media]) -> Void in
+            XCTAssertEqual(media.count, 24)
         }
+        InstagramModel().fetchUserMediaDetails (id_1, callback: {(media: [InstagramModel.Media]) -> Void in
+            XCTAssertEqual(media.count, 1)
+            XCTAssertEqual(media[0].user_id, "1")
+            InstagramModel().fetchUserDetails (media[0].user_id, callback: {(user: InstagramModel.User) -> Void in
+                XCTAssertEqual(user.follows, 333)
+                XCTAssertEqual(user.bio, "Every dream has a part II. UC Berkeley '18")
+            })
+        })
     }
     
 }
