@@ -20,9 +20,11 @@ class UserInfoCell: UITableViewCell {
                 userName.text = setHeader.username
 
                 // try to convert the unix timestamp to actual time but seems not work properly...
-//                let doubleTime = Double(setHeader.date)
-//                postDate.text = String(NSDate(timeIntervalSince1970:doubleTime!))
-                postDate.text = setHeader.date
+                let doubleTime = Double(setHeader.date)
+                let format = NSDateFormatter()
+                format.dateFormat = "yyyy-MM-dd hh:MM:ss"
+                postDate.text = format.stringFromDate(NSDate(timeIntervalSince1970:doubleTime!))
+//                postDate.text = setHeader.date
                 
                 if let url = NSURL(string: setHeader.avatarURL) {
                     if let data = NSData(contentsOfURL: url) {
