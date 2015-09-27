@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "6B7A4C9EF8234B92DD93E3C16809CE567BC1221B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "6B7A4C9EF8234B92DD93E3C16809CE567BC1221B" : 0,
+    "4CA5C3EEEAAE667F5EC2EAC2AFB6B4A6B71A377E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "12D9760E-B6B3-4E4C-A133-B2C12A87D51A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "6B7A4C9EF8234B92DD93E3C16809CE567BC1221B" : "Instagram\/",
+    "4CA5C3EEEAAE667F5EC2EAC2AFB6B4A6B71A377E" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Instagram",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Instagram.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:KKevinLL\/Project1.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4CA5C3EEEAAE667F5EC2EAC2AFB6B4A6B71A377E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:KKevinLL\/Proj2.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6B7A4C9EF8234B92DD93E3C16809CE567BC1221B"
+    }
+  ]
+}

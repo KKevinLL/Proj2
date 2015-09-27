@@ -22,18 +22,17 @@ public class InstagramModel {
     }
     
     struct Media {
+        let date: String
         let avatarURL: String
         let username: String
         let user_id: String
         let mediaURL: String
         let likes: Int
         let caption: String
-        let comments: [String]
+        let comments: [Comments]
     }
     
 
-    
-    // still trying to figure out how to deal with comments...
     struct Comments {
         let username: String
         let content:String
@@ -70,14 +69,13 @@ public class InstagramModel {
     func populateMediaWith(data: AnyObject?, callback: ([Media]) -> Void) {
         let json = JSON(data!)
         var medias = [Media]()
-        var Comments = [String]()
-        
         for media in json["data"].arrayValue {
-            for comment in media["comments"]["data"].arrayValue {
-                Comments.append(comment.stringValue)
+            var curComments:[Comments] = []
+            for comment in media["comments"]["data"].arrayValue{
+                curComments.append(Comments(username: comment["from"]["username"].stringValue, content: comment["text"].stringValue))
             }
-            medias.append(Media(avatarURL: media["user"]["profile_picture"].stringValue, username: media["user"]["username"].stringValue,
-                user_id: media["user"]["id"].stringValue, mediaURL: media["link"].stringValue, likes: media["likes"]["count"].intValue, caption: media["caption"].stringValue, comments: Comments))
+            medias.append(Media(date: media["created_time"].stringValue, avatarURL: media["user"]["profile_picture"].stringValue, username: media["user"]["username"].stringValue,
+                user_id: media["user"]["id"].stringValue, mediaURL: media["images"]["standard_resolution"]["url"].stringValue, likes: media["likes"]["count"].intValue, caption: media["caption"]["text"].stringValue,comments: curComments))
         }
         
         callback(medias)
