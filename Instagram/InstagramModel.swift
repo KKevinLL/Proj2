@@ -16,9 +16,9 @@ public class InstagramModel {
         let avatarURL: String
         let username: String
         let bio: String
-        let posts: Int
-        let followers: Int
-        let follows: Int
+        let posts: String
+        let followers: String
+        let follows: String
     }
     
     struct Media {
@@ -55,8 +55,8 @@ public class InstagramModel {
         let json = JSON(data!)["data"]
         callback(User(avatarURL: json["profile_picture"].stringValue,
             username: json["username"].stringValue, bio:
-            json["bio"].stringValue, posts: json["counts"]["media"].intValue,
-            followers: json["counts"]["followed_by"].intValue, follows: json["counts"]["follows"].intValue))
+            json["bio"].stringValue, posts: json["counts"]["media"].stringValue,
+            followers: json["counts"]["followed_by"].stringValue, follows: json["counts"]["follows"].stringValue))
     }
     
     func fetchUserMediaDetails(id: String, callback: ([Media]) -> Void) {

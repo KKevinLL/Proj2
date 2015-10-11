@@ -19,7 +19,12 @@ class MediaCell: UITableViewCell {
         didSet {
             if let setMedia = media {
                 Caption.text = setMedia.caption
-                likes.text = "❤️ " + String(setMedia.likes) + " likes"
+                let line = "❤️ " + String(setMedia.likes) + " likes"
+                let attributedString = NSMutableAttributedString(string:line)
+                let range = (line as NSString).rangeOfString(line)
+                let color = UIColor(red: 0.27, green: 0.56, blue: 1.0, alpha: 1.0)
+                attributedString.addAttribute(NSForegroundColorAttributeName, value: color, range: range)
+                likes.attributedText = attributedString
                 if let url = NSURL(string: setMedia.mediaURL) {
                     if let data = NSData(contentsOfURL: url) {
                         if let avatarSquare = UIImage(data:data) {

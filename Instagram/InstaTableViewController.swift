@@ -12,24 +12,79 @@ class InstaTableViewController: UITableViewController {
 
     var medias:[InstagramModel.Media] = []
     
+    var tapped = false
+    var id = ""
+
+    @IBOutlet var userphoto: UIImageView!
+    @IBOutlet var Following: UILabel!
+    @IBOutlet var Followers: UILabel!
+    @IBOutlet var Posts: UILabel!
+    @IBOutlet var UserView: UIView!
+    
     func refresh(sender:AnyObject)
     {
-        InstagramModel().fetchPopularMediaDetails{(media: [InstagramModel.Media]) -> Void in
-            self.medias = media
-            self.tableView.reloadData()
+        if tapped == true {
+            fetchUserInterface()
+        }
+        else {
+            fetchPopularMediaInterface()
         }
         self.refreshControl?.endRefreshing()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        InstagramModel().fetchPopularMediaDetails{(media: [InstagramModel.Media]) -> Void in
-            self.medias = media
-            self.tableView.reloadData()
+        toggleHeader()
+        if tapped == true {
+            fetchUserInterface()
+        }
+        else {
+            fetchPopularMediaInterface()
         }
         self.refreshControl?.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         
     }
 
+    func fetchUserInterface()
+    {
+        InstagramModel().fetchUserDetails(self.id, callback:
+            {user in
+                self.title = user.username
+                self.Posts.text = user.posts
+                self.Followers.text = user.followers
+                self.Following.text = user.follows
+                if let url = NSURL(string: user.avatarURL) {
+                    if let data = NSData(contentsOfURL: url) {
+                        if let avatarSquare = UIImage(data:data) {
+                            self.userphoto.layer.cornerRadius = self.userphoto.frame.size.width / 2
+                            self.userphoto.clipsToBounds = true
+                            self.userphoto.image = avatarSquare
+                        }
+                    }
+                }
+        })
+        InstagramModel().fetchUserMediaDetails(self.id, callback:
+            {(media: [InstagramModel.Media]) -> Void in
+                self.medias = media
+                self.tableView.reloadData()
+        })
+    }
+    
+    func fetchPopularMediaInterface()
+    {
+        InstagramModel().fetchPopularMediaDetails{(media: [InstagramModel.Media]) -> Void in
+            self.medias = media
+            self.tableView.reloadData()
+        }
+    }
+    
+    func toggleHeader()
+    {
+        if self.tapped == true
+        { tableView.tableHeaderView = self.UserView }
+        else
+        { tableView.tableHeaderView = nil }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -46,7 +101,7 @@ class InstaTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         return medias[section].comments.count + 1
     }
-
+    
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCellWithIdentifier("UserInfoCell") as! UserInfoCell
         let current = medias[section]
@@ -55,16 +110,18 @@ class InstaTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        tableView.estimatedRowHeight = 600
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         if(indexPath.row == 0){
-            tableView.rowHeight = 600
             let cell = tableView.dequeueReusableCellWithIdentifier("MediaCell", forIndexPath: indexPath) as! MediaCell
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             let current = medias[indexPath.section]
             cell.media = current
             return cell
         }else {
-            tableView.rowHeight = 20
-            tableView.separatorStyle = UITableViewCellSeparatorStyle.None
             let cell = tableView.dequeueReusableCellWithIdentifier("CommentsCell", forIndexPath: indexPath) as! CommentsCell
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             let current = medias[indexPath.section].comments[indexPath.row - 1]
             cell.comment = current
             return cell
@@ -72,50 +129,19 @@ class InstaTableViewController: UITableViewController {
         }
     }
     
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "UserView"{
+            let dest = segue.destinationViewController as! InstaTableViewController
+            dest.tapped = true
+            let currentCell = sender?.view as? UserInfoCell
+            let selectedUser = currentCell?.header
+            dest.id = (selectedUser?.user_id)!
+        }
     }
-    */
+    
 
 }
