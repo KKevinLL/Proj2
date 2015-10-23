@@ -9,8 +9,6 @@
 import UIKit
 
 
-//Currently this class is not being used...
-
 class CommentsCell: UITableViewCell {
 
 

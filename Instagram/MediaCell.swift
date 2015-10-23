@@ -25,13 +25,7 @@ class MediaCell: UITableViewCell {
                 let color = UIColor(red: 0.27, green: 0.56, blue: 1.0, alpha: 1.0)
                 attributedString.addAttribute(NSForegroundColorAttributeName, value: color, range: range)
                 likes.attributedText = attributedString
-                if let url = NSURL(string: setMedia.mediaURL) {
-                    if let data = NSData(contentsOfURL: url) {
-                        if let avatarSquare = UIImage(data:data) {
-                            Photo.image = avatarSquare
-                        }
-                    }
-                }
+                self.Photo.setImageWithURL(NSURL(string: setMedia.mediaURL)!)
             }
         }
     }

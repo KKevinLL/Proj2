@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InstaTableViewController: UITableViewController {
+class InstaTableViewController: UITableViewController, UserInfoCellDelegate{
 
     var medias:[InstagramModel.Media] = []
     
@@ -85,11 +85,24 @@ class InstaTableViewController: UITableViewController {
         { tableView.tableHeaderView = nil }
     }
     
+    func cellDidGetTapped(cell:UserInfoCell) {
+        let selectedUser = cell.header
+        let id = (selectedUser?.user.user_id)!
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let controller = storyboard.instantiateViewControllerWithIdentifier("Feeds") as! InstaTableViewController
+        controller.tapped = true
+        controller.id = id
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -106,6 +119,7 @@ class InstaTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("UserInfoCell") as! UserInfoCell
         let current = medias[section]
         cell.header = current
+        cell.delegate = self
         return cell
     }
     
@@ -134,13 +148,7 @@ class InstaTableViewController: UITableViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "UserView"{
-            let dest = segue.destinationViewController as! InstaTableViewController
-            dest.tapped = true
-            let currentCell = sender?.view as? UserInfoCell
-            let selectedUser = currentCell?.header
-            dest.id = (selectedUser?.user_id)!
-        }
+
     }
     
 

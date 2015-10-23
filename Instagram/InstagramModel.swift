@@ -15,17 +15,15 @@ public class InstagramModel {
     struct User {
         let avatarURL: String
         let username: String
-        let bio: String
         let posts: String
         let followers: String
         let follows: String
+        let user_id: String
     }
     
     struct Media {
         let date: String
-        let avatarURL: String
-        let username: String
-        let user_id: String
+        let user: User
         let mediaURL: String
         let likes: Int
         let caption: String
@@ -54,9 +52,8 @@ public class InstagramModel {
     func populateUserInfoWith(data: AnyObject?, callback: (User) -> Void) {
         let json = JSON(data!)["data"]
         callback(User(avatarURL: json["profile_picture"].stringValue,
-            username: json["username"].stringValue, bio:
-            json["bio"].stringValue, posts: json["counts"]["media"].stringValue,
-            followers: json["counts"]["followed_by"].stringValue, follows: json["counts"]["follows"].stringValue))
+            username: json["username"].stringValue, posts: json["counts"]["media"].stringValue,
+            followers: json["counts"]["followed_by"].stringValue, follows: json["counts"]["follows"].stringValue, user_id: json["id"].stringValue))
     }
     
     func fetchUserMediaDetails(id: String, callback: ([Media]) -> Void) {
@@ -68,14 +65,15 @@ public class InstagramModel {
     
     func populateMediaWith(data: AnyObject?, callback: ([Media]) -> Void) {
         let json = JSON(data!)
+        
         var medias = [Media]()
         for media in json["data"].arrayValue {
             var curComments:[Comments] = []
+            let curUser:User = User(avatarURL: media["user"]["profile_picture"].stringValue, username: media["user"]["username"].stringValue, posts: "", followers: "", follows: "", user_id: media["user"]["id"].stringValue)
             for comment in media["comments"]["data"].arrayValue{
                 curComments.append(Comments(username: comment["from"]["username"].stringValue, content: comment["text"].stringValue))
             }
-            medias.append(Media(date: media["created_time"].stringValue, avatarURL: media["user"]["profile_picture"].stringValue, username: media["user"]["username"].stringValue,
-                user_id: media["user"]["id"].stringValue, mediaURL: media["images"]["standard_resolution"]["url"].stringValue, likes: media["likes"]["count"].intValue, caption: media["caption"]["text"].stringValue,comments: curComments))
+            medias.append(Media(date: media["created_time"].stringValue, user: curUser, mediaURL: media["images"]["standard_resolution"]["url"].stringValue, likes: media["likes"]["count"].intValue, caption: media["caption"]["text"].stringValue,comments: curComments))
         }
         
         callback(medias)
